@@ -1,0 +1,108 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef int ElementType;
+typedef struct Node *PtrToNode;
+struct Node {
+    ElementType Data;
+    PtrToNode   Next;
+};
+typedef PtrToNode List;
+
+List Read(); /* 细节在此不表 */
+void Print( List L ); /* 细节在此不表；空链表将输出NULL */
+
+List Merge( List L1, List L2 );
+
+int main()
+{
+    List L1, L2, L;
+    L1 = Read();
+    L2 = Read();
+    L = Merge(L1, L2);
+    Print(L);
+    Print(L1);
+    Print(L2);
+    return 0;
+}
+
+List Read(){
+
+	List L,last;
+	L=(List)malloc(sizeof(struct Node));
+	last=(List)malloc(sizeof(struct Node));
+	
+	L->Data=-1 ;
+	L->Next=NULL;
+	last=L;
+	
+	int n;
+	scanf("%d",&n);
+	for(int i=0;i<n;i++){
+		List p=(List)malloc(sizeof(struct Node));
+		scanf("%d",&p->Data);
+		p->Next=NULL;
+		last->Next=p;
+		last=p;
+	}
+	return L;	
+}
+
+List Merge( List L11, List L22 ){
+	List M,last;
+	M=(List)malloc(sizeof(struct Node));
+	M->Data=-1;
+	M->Next=NULL;
+	last=(List)malloc(sizeof(struct Node));
+	last=M;
+	
+	List L1,L2;
+	L1=L11;L2=L22;
+	while(L1->Next!=NULL && L2->Next !=NULL){
+		List p=(List)malloc(sizeof(struct Node));
+		p->Next=NULL;
+		
+		if(L1->Next->Data< L2->Next->Data){
+			p->Data=L1->Next->Data;
+			last->Next=p;
+			last=p;
+			L1=L1->Next;	
+		}
+		else{
+			p->Data=L2->Next->Data;
+			last->Next=p;
+			last=p;
+			L2=L2->Next;
+		}
+	}
+	
+	
+	if(L1->Next!=NULL){
+		last->Next=L1->Next;
+	}
+	else if(L2!=NULL){
+		last->Next=L2->Next;
+	
+	}
+	
+	L11->Next=NULL;
+	L22->Next=NULL;		
+	return M;
+	
+}
+
+void  Print(List L){
+	if(L->Next==NULL){
+		printf("NULL");
+	}
+	else{
+		L=L->Next;
+		while(L!=NULL){
+			printf("%d ",L->Data);
+			L=L->Next;
+		}
+	}
+	printf("\n");	
+	//return ;
+}
+
