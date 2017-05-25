@@ -1,0 +1,89 @@
+#include<stdio.h>
+#include<ctype.h>
+
+#define null -1
+
+ struct node{
+	int root;
+	int left;
+	int right;
+};
+
+struct node nodes[10];
+
+int main(){
+	int N;
+	scanf("%d",&N);
+//only fill the needed N nodes,not 10?
+//ans：没填的数组，自动补全为 0， 不影响对叶子结点的判断和输出 
+	for(int i=0;i<N;i++){
+		nodes[i].root=-1;
+		nodes[i].right=null;
+		nodes[i].left=null;
+	}
+
+	for(int i=0;i<N;i++){
+		char lc,rc; // the type is character,not int !
+		scanf("\n%c %c",&lc,&rc);//注意转行字符！！！！ 
+		
+		if(isdigit(lc)){
+			nodes[i].left=lc-'0';
+			nodes[lc-'0'].root=i; //root doesn't matter,left and right matters 
+		}
+		/* 
+		else{
+			nodes[i].left=null;
+		}
+		*/ 
+		if(isdigit(rc)){
+			nodes[i].right=rc-'0';
+			nodes[rc-'0'].root=i;
+		}
+		/* 
+		else{
+			nodes[i].right=null;
+		}
+		*/ 
+	}
+
+    int ROOT;
+    int k=0;
+	for(;k<10;k++){
+		if(nodes[k].root==-1)//找到root没变的结点，并跳出，得到其值 
+		    break;
+	} 
+	ROOT=k;//nodes[]中root值为-1的就是整棵树的root ，debug前root原始设置为了0，不好，影响0号结点的孩子的判断，误以为其为root 
+
+	int head,rear;
+	head=0;
+	rear=0;
+	int queue[10];
+	queue[rear++]=ROOT;//c语言里手动queue 
+	int flag=1; //flag 's position ,not in the loop ！！ 
+	while(rear-head)
+	{
+		int temp=queue[head++];
+		if(nodes[temp].left==null && nodes[temp].right==null)
+		{
+			if(flag){
+				printf("%d",temp);
+				flag=0;	
+			}
+			else
+				printf(" %d",temp);
+		}	
+		
+		if(nodes[temp].left!=null) //分别判断左右，之前写错了 
+		{
+			queue[rear++]=nodes[temp].left;	
+		}	
+		
+		if(nodes[temp].right!=null) //分别判断左右，之前写错了 
+		{
+			queue[rear++]=nodes[temp].right;	
+		}		
+	}	 
+	
+	return 0;
+} 
+
